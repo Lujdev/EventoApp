@@ -43,7 +43,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-center">
-                                <button type="submit" class="btn btn-primary btn-round btn-lg btn-block">Acceder</button>
+                                <button type="submit" class="btn btn-primary btn-round btn-lg btn-block" style="    background-color: #252a31;">Acceder</button>
                                 {{-- <div class="pull-left">
                                     <h6>
                                         @if (Route::has('password.request'))
