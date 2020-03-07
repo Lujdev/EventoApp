@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,10 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes(['register' => false]);
+Route::get('/', 'TicketController@index')->name('hometickets');
+Route::group(['prefix' => 'ticket'], function () {
+    Route::post('gethorario', 'TicketController@gethorario')->name('gethorario');
+    Route::post('registro', 'TicketController@registro')->name('registro');
+    Route::get('getregistros', 'TicketController@getregistros')->name('getregistros');
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('/home', 'AdminController@index')->name('indexpanel')->middleware('auth');
+});
