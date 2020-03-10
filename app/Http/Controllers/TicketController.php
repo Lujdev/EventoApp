@@ -29,7 +29,7 @@ class TicketController extends Controller
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required|max:50|min:2',
                 'apellido' => 'required|max:50|min:2',
-                'email' => 'required|email:rfc,dns|max:50',
+                'email' => 'required|max:50',
                 'fecha' => 'required|date_format:Y-m-d',
                 'horario_radio' => 'required|integer',
                 ]);
@@ -121,6 +121,53 @@ class TicketController extends Controller
             
             return $e->getMessage();
 
+        }
+    }
+
+    public function delete(Request $request){
+
+        
+        if($request){
+            $validator = Validator::make($request->all(), [
+                'id' => 'required|integer',
+            ]);
+
+            if ($validator->fails()) {
+
+                $respuesta = [
+                    'title' => 'Error',
+                    'text' => $validator->messages()->all()[0],
+                    'icon' => 'error'
+                ];   
+
+                return json_encode($respuesta);
+
+            }
+            
+            try {
+
+                $registro = DB::statement('call eliminar_participante(?)', [
+                    $request->id
+                ]);
+
+                if($registro){
+
+                    $respuesta = [
+                        'title' => 'Exito',
+                        'text' => 'Registro eliminado con exito.',
+                        'icon' => 'success'
+                    ];   
+
+                    return json_encode($respuesta);
+
+                }
+                
+            } catch (Exception $e) {
+
+                return $e->getMessage();
+
+            }
+            
         }
     }
 }

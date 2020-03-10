@@ -20,6 +20,7 @@ Route::group(['prefix' => 'ticket'], function () {
     Route::post('gethorario', 'TicketController@gethorario')->name('gethorario');
     Route::post('registro', 'TicketController@registro')->name('registro');
     Route::get('getregistros', 'TicketController@getregistros')->name('getregistros');
+    Route::post('delete', 'TicketController@delete')->name('deleteregistro');
 });
 Route::group(['prefix' => 'admin'], function () {
     Route::get('/home', 'AdminController@index')->name('indexpanel')->middleware('auth');

@@ -106,8 +106,7 @@
     </div>
 </div>
 
-@include('footer')
-
+@include('sweetalert::alert')
 <script>
   ;
 ((d, w, c) => {
