@@ -38,6 +38,7 @@
                             <a class="dropdown-item" href="{{ route('login') }}">{{ __('Login') }}</a>
                         @else
                             <a class="dropdown-item" onclick="event.preventDefault();  document.getElementById('logout-form').submit();" href="{{ route('logout') }}">{{ __('Logout') }}</a>
+                            <a class="dropdown-item" href="{{ route('indexpanel') }}">Lista Registrados</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
                             </form>
@@ -124,7 +125,7 @@
         <!-- End Content -->
 
         <!-- Footer -->
-            
+            @include('footer')
         <!-- End Footer -->
         
     </div>
@@ -132,7 +133,6 @@
     <!-- Others JS-->
     
     <script src="{{ asset('js/custom.js') }}" ></script>
-    @include('sweetalert::alert')
 </body>
 
 </html>

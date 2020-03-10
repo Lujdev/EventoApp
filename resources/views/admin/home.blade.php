@@ -32,11 +32,17 @@
             </div>
         </div>
 
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/fc-3.3.0/fh-3.1.6/r-2.2.3/sl-1.3.1/datatables.min.css"/>
- 
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/fc-3.3.0/fh-3.1.6/r-2.2.3/sl-1.3.1/datatables.min.js"></script>
+        <script src="{{ asset('vendor/sweetalert/sweetalert.all.js')}}"></script>
+        {{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/fc-3.3.0/fh-3.1.6/r-2.2.3/sl-1.3.1/datatables.min.css"/> --}}
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/datatables.css')}}">   
+        <script type="text/javascript" src="{{ asset('js/datatables.js') }}"></script>
+        
+        {{-- <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/b-1.6.1/fc-3.3.0/fh-3.1.6/r-2.2.3/sl-1.3.1/datatables.min.js"></script> --}}
         
         <script>
+
+            var t;
+
             $(document).ready(function () {
 
                 $.ajaxSetup({
@@ -45,7 +51,7 @@
                     }
                 });
 
-               var t =  $('#myTable').DataTable({
+               t =  $('#myTable').DataTable({
                     "ajax": {
                         "url": "{{ route('getregistros') }}",
                         "type": "GET",
@@ -97,7 +103,7 @@
                         { data: 'bloque', name: 'bloque',  autoWidth: true },
                         { data: 'disciplina', name: 'disciplina',  autoWidth: true },
                         { data: 'horario', name: 'horario',  autoWidth: true },
-                        {"data":null,"defaultContent":"<button>View</button>"}
+                        {"data":null,"defaultContent":"<div class='btn-group' role='group'><button type='button' name='view' class='view btn btn-info'>View</button><button type='button' name='delete' class='delete btn btn-danger'>Delete</button></div>"}
                      ],
                      "order": [[ 1, 'desc' ]]
                 })
@@ -108,8 +114,53 @@
                     } );
                 } ).draw();
 
+                $('#myTable tbody').on('click', '.delete', function(){
+                    Swal.fire({
+                        title: 'Estas seguro?',
+                        text: "Una vez eliminado el registro no podra recuperarse!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, eliminar!'
+                    }).then((result) => {
+                        if(result.value){
+                            var tr = $(this).closest("tr");
+                            var rowData = t.row(tr).data();
+                            deleteRegister(rowData);
+                        }
+                    })
+                });
 
             });
+
+
+            function deleteRegister(value){
+                axios.post('{{ route('deleteregistro') }}', {
+                    id: value.id,
+                })
+                .then(function (response) {
+
+                let resp = response.data;
+                console.log(resp);
+
+                Swal.fire({
+                    icon: resp.icon,
+                    title: resp.title,
+                    text: resp.text,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+                t.ajax.reload();
+
+                })
+                .catch(function (error) {
+                console.log(error);
+                });
+
+            }
+
         </script>
     </body>
 
@@ -117,5 +168,14 @@
         body{
             color: #000000 !important;
         }
+
+        .footer{
+            color: white !important;
+            background-color: #252a31 !important;
+        }
     </style>
+
+
+
+
 @endsection 
